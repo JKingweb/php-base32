@@ -4,7 +4,7 @@
     by J. King (http://jkingweb.ca/)
    Licensed under MIT license
 
-   Last revised 2014-09-06
+   Last revised 2015-09-27
 */
 
 /*
