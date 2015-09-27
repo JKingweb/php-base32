@@ -46,22 +46,22 @@ function encode($str, $hex = FALSE, $pad = TRUE) {
 		$b1 = ord($str[$a]);
 		$out .= $ab[$b1 >> 3];
 		if(++$a < $m) {$b2 = ord($str[$a]);} else {$b2 = 0;}
-		$out .= $ab[((255 >> 5 & $b1) << 2) + ($b2 >> 6)];
+		$out .= $ab[(0b11100 & $b1 << 2) + ($b2 >> 6)];
 		if($a >= $m) break;
-		$out .= $ab[255 >> 3 & $b2 >> 1];
+		$out .= $ab[0b11111 & $b2 >> 1];
 		$b1 = $b2;
 		if(++$a < $m) {$b2 = ord($str[$a]);} else {$b2 = 0;}
-		$out .= $ab[((255 >> 7 & $b1) << 4) + ($b2 >> 4)];
+		$out .= $ab[(0b10000 & $b1 << 4) + ($b2 >> 4)];
 		$b1 = $b2;
 		if(++$a < $m) {$b2 = ord($str[$a]);} else {$b2 = 0;}
-		$out .= $ab[((255 >> 4 & $b1) << 1) + ($b2 >> 7)];
+		$out .= $ab[(0b11110 & $b1 << 1) + ($b2 >> 7)];
 		if($a >= $m) break;
-		$out .= $ab[255 >> 3 & $b2 >> 2];
+		$out .= $ab[0b11111 & $b2 >> 2];
 		$b1 = $b2;
 		if(++$a < $m) {$b2 = ord($str[$a]);} else {$b2 = 0;}
-		$out .= $ab[((255 >> 6 & $b1) << 3) + ($b2 >> 5)];
+		$out .= $ab[(0b11000 & $b1 << 3) + ($b2 >> 5)];
 		if($a >= $m) break;
-		$out .= $ab[255 >> 3 & $b2];
+		$out .= $ab[0b11111 & $b2];
 	}
 	$out .= str_repeat("=", ($pad) ? (8 - strlen($out) % 8) % 8 : 0);
 	return $out;
@@ -104,20 +104,20 @@ function decode($str, $hex = FALSE, $pad = TRUE, $strict = TRUE) {
 		$c1 = $c2;
 		if(++$a < $m) {$c2 = $ab[$str[$a]];} else {throw new Base32Exception("Premature end of input; expecting digit at position $m.", 4);}
 		if(++$a < $m) {$c3 = $ab[$str[$a]];} else {throw new Base32Exception("Premature end of input; expecting digit at position $m.", 4);}
-		$out .= chr(((31 >> 3 & $c1) << 6) + ($c2 << 1) + (31 >> 4 & $c3 >> 4));
+		$out .= chr(((0b00011 & $c1) << 6) + ($c2 << 1) + (0b00001 & $c3 >> 4));
 		if($a+1 >= $m) break;
 		$c1 = $c3;
 		if(++$a < $m) {$c2 = $ab[$str[$a]];} else {throw new Base32Exception("Premature end of input; expecting digit at position $m.", 4);}
-		$out .= chr(((31 >> 1 & $c1) << 4) + ($c2 >> 1));
+		$out .= chr(((0b01111 & $c1) << 4) + ($c2 >> 1));
 		if($a+1 >= $m) break;
 		$c1 = $c2;
 		if(++$a < $m) {$c2 = $ab[$str[$a]];} else {throw new Base32Exception("Premature end of input; expecting digit at position $m.", 4);}
 		if(++$a < $m) {$c3 = $ab[$str[$a]];} else {throw new Base32Exception("Premature end of input; expecting digit at position $m.", 4);}
-		$out .= chr(((31 >> 4 & $c1) << 7) + ($c2 << 2) + (31 >> 3 & $c3 >> 3));
+		$out .= chr(((0b00001 & $c1) << 7) + ($c2 << 2) + (0b00011 & $c3 >> 3));
 		if($a+1 >= $m) break;
 		$c1 = $c3;
 		if(++$a < $m) {$c2 = $ab[$str[$a]];} else {throw new Base32Exception("Premature end of input; expecting digit at position $m.", 4);}
-		$out .= chr(((31 >> 2 & $c1) << 5) + $c2);
+		$out .= chr(((0b00111 & $c1) << 5) + $c2);
 	}
 	return $out;
 }
