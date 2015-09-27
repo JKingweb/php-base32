@@ -1,4 +1,38 @@
 <?php
+/*
+   RFC 4648 base32 library for PHP
+    by J. King (http://jkingweb.ca/)
+   Licensed under MIT license
+
+   Last revised 2014-09-06
+*/
+
+/*
+Copyright (c) 2015 J. King
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+
 namespace base32;
 
 function encode($str, $hex = FALSE, $pad = TRUE) {
@@ -29,9 +63,7 @@ function encode($str, $hex = FALSE, $pad = TRUE) {
 		if($a >= $m) break;
 		$out .= $ab[255 >> 3 & $b2];
 	}
-	$padn = [0, 8=>6,16=>4,24=>3,32=>1];
-	$padn = ($pad) ? $padn[$m * 8 % 40] : 0;
-	$out .= str_repeat("=", $padn);
+	$out .= str_repeat("=", ($pad) ? (8 - strlen($out) % 8) % 8 : 0);
 	return $out;
 }
 
